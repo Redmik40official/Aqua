@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Order - Sustainable Aquaculture Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;600;700&family=Segoe+UI:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <!-- ==================== HEADER & NAVIGATION ==================== -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../index.html">HOME</a></li>
+                <li><a href="../index.html#featured">FEATURED</a></li>
+                <li><a href="../index.html#systems">SHOP</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+                <li style="margin-left: auto;">
+                    <a href="cart.html" class="active" style="position: relative;">
+                        🛒 <span class="cart-count" style="position: absolute; top: -8px; right: -8px; background: #e87856; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: 700; font-family: monospace;">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main>
+        <section class="content-section" style="min-height: 60vh;">
+            <h1>System Order Summary</h1>
+            
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-3xl); margin-top: var(--spacing-2xl);">
+                <!-- Cart Items -->
+                <div>
+                    <div id="cart-items" style="background: white; border-radius: 12px; padding: var(--spacing-xl); border: 1px solid var(--neutral-border-light);">
+                        <!-- Cart items will be populated by JavaScript -->
+                        <p style="text-align: center; color: var(--neutral-medium); padding: var(--spacing-2xl) 0;">Loading cart...</p>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div style="background: linear-gradient(135deg, rgba(31, 95, 143, 0.08) 0%, rgba(74, 143, 189, 0.06) 100%); border-radius: 12px; padding: var(--spacing-xl); border: 1px solid var(--neutral-border-light); height: fit-content; position: sticky; top: 20px;">
+                    <h3 style="color: var(--primary-medium); margin-bottom: var(--spacing-lg);">Installation Quote</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); font-size: 0.9rem;">
+                        <div>
+                            <p style="color: var(--neutral-medium); margin: 0;">System Cost:</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p id="subtotal" style="color: var(--neutral); margin: 0; font-weight: 600;">$0.00</p>
+                        </div>
+                        
+                        <div>
+                            <p style="color: var(--neutral-medium); margin: 0;">Installation:</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="color: var(--neutral); margin: 0; font-weight: 600;">Included</p>
+                        </div>
+                        
+                        <div>
+                            <p style="color: var(--neutral-medium); margin: 0;">Site Visit & Setup:</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="color: var(--neutral); margin: 0; font-weight: 600;">Included</p>
+                        </div>
+                    </div>
+                    
+                    <hr style="border: none; border-top: 2px solid var(--neutral-border-light); margin: var(--spacing-lg) 0;">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-xl);">
+                        <div>
+                            <p style="color: var(--primary-medium); margin: 0; font-weight: 700;">Total Investment:</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p id="cart-total" style="font-size: 1.5rem; color: var(--primary-medium); margin: 0; font-weight: 700;">$0.00</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: var(--spacing-md);" onclick="proceedToCheckout()">Request Installation</button>
+                    
+                    <a href="../index.html#systems" class="btn btn-secondary" style="display: block; text-align: center; width: 100%; text-decoration: none;">Browse Systems</a>
+                    
+                    <button style="width: 100%; margin-top: var(--spacing-md); background: rgba(232, 120, 86, 0.1); color: #e87856; border: none; padding: var(--spacing-md); border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;" onclick="cartManager.clearCart()">Clear Order</button>
+                    
+                    <div style="background: rgba(31, 95, 143, 0.05); padding: var(--spacing-lg); border-radius: 8px; margin-top: var(--spacing-xl);">
+                        <h5 style="color: var(--primary-medium); margin-top: 0;">⚙️ Installation Includes</h5>
+                        <ul style="padding-left: var(--spacing-lg); color: var(--neutral-medium); font-size: 0.85rem; margin-bottom: 0;">
+                            <li style="margin-bottom: var(--spacing-sm);">Professional site assessment</li>
+                            <li style="margin-bottom: var(--spacing-sm);">Full system installation</li>
+                            <li style="margin-bottom: var(--spacing-sm);">Staff training program</li>
+                            <li style="margin-bottom: var(--spacing-sm);">1-year technical support</li>
+                            <li>Performance guarantee</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA SECTION -->
+        <section class="content-section" style="margin-top: var(--spacing-3xl); background: linear-gradient(135deg, rgba(31, 95, 143, 0.08) 0%, rgba(74, 143, 189, 0.06) 100%); text-align: center;">
+            <h2>Ready to Get Started?</h2>
+            <p style="font-size: 1.05rem; margin: var(--spacing-lg) auto; max-width: 700px;">Our technical team will guide you through the installation process and ensure optimal system performance from day one.</p>
+            <div style="margin-top: var(--spacing-xl); display: flex; gap: var(--spacing-lg); justify-content: center; flex-wrap: wrap;">
+                <a href="contact.html" class="btn btn-primary">Schedule Consultation</a>
+                <a href="about.html" class="btn btn-secondary">Learn More</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        <p>&copy; 2024 Sustainable Aquaculture Systems. Engineering. Sustainability. Profitability.</p>
+    </footer>
+    <script src="../scripts/navigation.js"></script>
+    <script src="../scripts/products.js"></script>
+    <script src="../scripts/cart.js"></script>
+    <script>
+        // Update cart display on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            cartManager.loadCart();
+            updateTotals();
+        });
+
+        function updateTotals() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('cart-total').textContent = '$' + subtotal.toFixed(2);
+        }
+
+        function proceedToCheckout() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert('Please select a system.');
+                return;
+            }
+            alert('Thank you for your interest! Our team will contact you within 24 hours to schedule a consultation and site visit.');
+            cartManager.clearCart();
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html>

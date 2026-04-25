@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Fish & Pottery</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="inner-page">
+    <!-- ==================== HEADER ==================== -->
+    <header class="glass-panel sticky-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="../index.html" class="logo-link">
+                    <span class="logo-text">FISH</span>
+                    <span class="logo-subtext">COLLECTION</span>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="shop.html" class="active">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="cart.html" class="cart-link">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="inner-hero glass-panel">
+            <div class="container">
+                <h1 class="reveal-text">Premium <span class="highlight">Catalog</span></h1>
+                <p class="lead">Hand-picked livestock and artisanal equipment for the discerning aquarist.</p>
+                
+                <div class="category-nav">
+                    <button class="category-btn active" data-category="all">All Products</button>
+                    <button class="category-btn" data-category="fish">Live Fish</button>
+                    <button class="category-btn" data-category="shrimp">Shrimp</button>
+                    <button class="category-btn" data-category="plants">Plants</button>
+                    <button class="category-btn" data-category="accessories">Accessories</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="product-section">
+            <div class="container">
+                <div id="product-list" class="premium-grid">
+                    <!-- Products will be populated by products.js -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h4>AQUATIC COLLECTION</h4>
+                    <p>The finest aquatic life and artisanal equipment for the discerning collector.</p>
+                </div>
+                <div class="footer-links">
+                    <h5>Explore</h5>
+                    <ul>
+                        <li><a href="shop.html">Shop All</a></li>
+                        <li><a href="shop.html?cat=fish">Live Fish</a></li>
+                        <li><a href="shop.html?cat=shrimp">Shrimp</a></li>
+                        <li><a href="shop.html?cat=plants">Plants</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h5>Connect</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Fish & Pottery. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/products.js"></script>
+    <script src="../scripts/cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setupCategoryFilters();
+        });
+
+        function setupCategoryFilters() {
+            const buttons = document.querySelectorAll('.category-btn');
+            
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const targetCategory = btn.getAttribute('data-category');
+                    const items = document.querySelectorAll('.product-card-premium');
+
+                    items.forEach(item => {
+                        if (targetCategory === 'all' || item.getAttribute('data-category') === targetCategory) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+</html>

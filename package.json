@@ -1,0 +1,42 @@
+{
+  "name": "aquaculture-systems-website",
+  "version": "1.0.0",
+  "description": "Sustainable aquaculture systems engineering - Productivity with environmental stability.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "echo 'Build process can be defined here.'"
+  },
+  "keywords": [
+    "aquaculture",
+    "sustainable",
+    "aquaculture-systems",
+    "environmental",
+    "food-production",
+    "engineering"
+  ],"author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "nodemailer": "^6.9.1",
+    "axios": "^1.4.0",
+    "compression": "^1.7.4",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.7.0",
+    "google-auth-library": "^8.8.0",
+    "firebase": "^9.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "live-server": "^1.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Fish Pottery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;600;700&family=Segoe+UI:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <header>
+        <h1>Fish Pottery</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main style="max-width: 500px; margin: var(--spacing-2xl) auto; padding: var(--spacing-lg);">
+        <section style="background: white; padding: var(--spacing-2xl); border-radius: 12px; box-shadow: 0 4px 20px rgba(26, 77, 109, 0.08);">
+            <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">Login to Your Account</h2>
+            
+            <form id="login-form" style="display: flex; flex-direction: column; gap: var(--spacing-lg);">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required style="width: 100%; padding: var(--spacing-md); border: 1px solid var(--neutral-border); border-radius: 8px; font-size: 1rem;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required style="width: 100%; padding: var(--spacing-md); border: 1px solid var(--neutral-border); border-radius: 8px; font-size: 1rem;">
+                </div>
+                
+                <button type="submit" class="contact-form button" style="background: linear-gradient(135deg, var(--accent-warm), var(--accent-coral)); color: white; padding: var(--spacing-md); border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Login</button>
+            </form>
+            
+            <div style="text-align: center; margin-top: var(--spacing-lg); color: var(--neutral-medium);">
+                Don't have an account? <a href="register.html" style="color: var(--primary-medium); font-weight: 600;">Register here</a>
+            </div>
+            
+            <div style="margin-top: var(--spacing-lg); text-align: center;">
+                <p style="margin-bottom: var(--spacing-md);">Or login with:</p>
+                <button type="button" onclick="authManager.showNotification('Google login coming soon', 'info')" style="padding: 10px 20px; margin: 5px; background: white; border: 1px solid var(--neutral-border); border-radius: 6px; cursor: pointer;">Google</button>
+                <button type="button" onclick="authManager.showNotification('Facebook login coming soon', 'info')" style="padding: 10px 20px; margin: 5px; background: white; border: 1px solid var(--neutral-border); border-radius: 6px; cursor: pointer;">Facebook</button>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Fish Pottery. All rights reserved.</p>
+    </footer>
+    
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/auth.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                await authManager.login(email, password);
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1000);
+            } catch (error) {
+                console.error('Login failed:', error);
+            }
+        });
+    </script>
+</body>
+</html>

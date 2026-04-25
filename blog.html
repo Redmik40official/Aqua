@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Fish Pottery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;600;700&family=Segoe+UI:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <header>
+        <h1>Fish Pottery Blog</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main style="padding: var(--spacing-2xl) var(--spacing-lg);">
+        <section>
+            <h2>Latest Articles</h2>
+            <p>Discover pottery care tips, artisan stories, and inspiration from our creative community.</p>
+        </section>
+        
+        <div style="display: grid; grid-template-columns: 250px 1fr; gap: var(--spacing-lg); margin-top: var(--spacing-xl);">
+            <div style="background: white; padding: var(--spacing-lg); border-radius: 12px; height: fit-content; box-shadow: 0 4px 15px rgba(26, 77, 109, 0.1);">
+                <h3>Categories</h3>
+                <div id="categories" style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+                    <button onclick="filterByCategory('')" style="padding: 10px; background: var(--primary-medium); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">All Posts</button>
+                </div>
+            </div>
+            
+            <div id="blog-posts" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-lg);">
+                <p style="grid-column: 1/-1; text-align: center; padding: var(--spacing-2xl); color: var(--neutral-medium);">Loading blog posts...</p>
+            </div>
+        </div>
+        
+        <div id="pagination" style="text-align: center; margin-top: var(--spacing-2xl);"></div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Fish Pottery. All rights reserved.</p>
+    </footer>
+    
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/auth.js"></script>
+    <script>
+        let currentPage = 1;
+        let currentCategory = '';
+        
+        async function loadBlogPosts(page = 1, category = '') {
+            try {
+                const response = await blogAPI.getAll({
+                    page,
+                    category: category || undefined
+                });
+                
+                renderBlogPosts(response.posts);
+                renderPagination(response.page, response.pages);
+                currentPage = page;
+                currentCategory = category;
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                document.getElementById('blog-posts').innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #f44336;">Error loading posts</p>';
+            }
+        }
+        
+        function renderBlogPosts(posts) {
+            const container = document.getElementById('blog-posts');
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: var(--spacing-2xl); color: var(--neutral-medium);">No posts found</p>';
+                return;
+            }
+            
+            container.innerHTML = posts.map(post => `
+                <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(26, 77, 109, 0.1); transition: all 0.3s ease-out;">
+                    ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" style="width: 100%; height: 200px; object-fit: cover;">` : `<div style="width: 100%; height: 200px; background: linear-gradient(135deg, var(--primary-light), var(--accent-gold)); display: flex; align-items: center; justify-content: center; color: white; font-size: 3em;">📰</div>`}
+                    <div style="padding: var(--spacing-lg);">
+                        <div style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
+                            ${post.category ? `<span style="display: inline-block; background: var(--accent-gold); color: var(--neutral-dark); padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600;">${post.category}</span>` : ''}
+                            <span style="color: var(--neutral-medium); font-size: 0.9em;">${new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                        </div>
+                        <h3 style="margin: 0 0 var(--spacing-sm) 0; color: var(--primary-dark);">${post.title}</h3>
+                        <p style="margin: 0 0 var(--spacing-md) 0; color: var(--neutral-medium); line-height: 1.6;">${post.excerpt || post.content.substring(0, 100) + '...'}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <a href="blog-post.html?slug=${post.slug}" style="color: var(--primary-medium); font-weight: 600; text-decoration: none;">Read More →</a>
+                            <span style="color: #999; font-size: 0.9em;">👀 ${post.views}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderPagination(page, pages) {
+            const container = document.getElementById('pagination');
+            
+            if (pages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '<div style="display: flex; gap: 10px; justify-content: center; align-items: center;">';
+            
+            if (page > 1) {
+                html += `<button onclick="loadBlogPosts(${page - 1}, '${currentCategory}')">← Previous</button>`;
+            }
+            
+            for (let i = Math.max(1, page - 2); i <= Math.min(pages, page + 2); i++) {
+                if (i === page) {
+                    html += `<button style="background: var(--primary-medium); color: white;">${i}</button>`;
+                } else {
+                    html += `<button onclick="loadBlogPosts(${i}, '${currentCategory}')">${i}</button>`;
+                }
+            }
+            
+            if (page < pages) {
+                html += `<button onclick="loadBlogPosts(${page + 1}, '${currentCategory}')">Next →</button>`;
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        async function filterByCategory(category) {
+            loadBlogPosts(1, category);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBlogPosts();
+        });
+    </script>
+</body>
+</html>

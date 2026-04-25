@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist - Fish Pottery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Garamond:wght@400;600;700&family=Segoe+UI:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <header>
+        <h1>Fish Pottery</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="cart.html">Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main style="padding: var(--spacing-2xl) var(--spacing-lg);">
+        <h2>My Wishlist</h2>
+        
+        <div id="wishlist-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-lg); margin-top: var(--spacing-xl);">
+            <p style="grid-column: 1/-1; text-align: center; padding: var(--spacing-2xl); color: var(--neutral-medium);">Loading your wishlist...</p>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Fish Pottery. All rights reserved.</p>
+    </footer>
+    
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/cart.js"></script>
+    <script src="../scripts/products.js"></script>
+    <script>
+        async function loadWishlist() {
+            authManager.requireAuth(async () => {
+                try {
+                    const response = await usersAPI.getWishlist();
+                    const products = response.items || [];
+                    renderWishlist(products);
+                } catch (error) {
+                    console.error('Error loading wishlist:', error);
+                    document.getElementById('wishlist-container').innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #f44336;">Error loading wishlist</p>';
+                }
+            });
+        }
+        
+        function renderWishlist(products) {
+            const container = document.getElementById('wishlist-container');
+            
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: var(--spacing-2xl);">
+                        <p style="font-size: 1.2em; color: var(--neutral-medium); margin-bottom: var(--spacing-lg);">Your wishlist is empty</p>
+                        <a href="shop.html" class="btn-primary" style="display: inline-block; padding: var(--spacing-md) var(--spacing-lg); background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark)); color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Continue Shopping</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = products.map(product => `
+                <div class="product">
+                    <img src="${product.image_url || 'https://via.placeholder.com/200'}" alt="${product.name}">
+                    <div class="product-content">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                        <div class="product-rating">
+                            ${'★'.repeat(Math.round(product.rating))}${'☆'.repeat(5 - Math.round(product.rating))}
+                            (${product.review_count} reviews)
+                        </div>
+                        <button onclick="cartManager.addToCart(${product.id})" class="contact-form button" style="width: 100%; background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark)); color: white; padding: 10px; margin: 10px 0; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Add to Cart</button>
+                        <button onclick="removeFromWishlist(${product.id})" style="width: 100%; background: #f44336; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Remove from Wishlist</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function removeFromWishlist(productId) {
+            try {
+                await usersAPI.removeFromWishlist(productId);
+                authManager.showNotification('Removed from wishlist', 'success');
+                loadWishlist();
+            } catch (error) {
+                authManager.showNotification(error.message, 'error');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadWishlist);
+    </script>
+</body>
+</html>

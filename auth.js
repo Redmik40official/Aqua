@@ -93,15 +93,15 @@ class AuthManager {
       authContainer.innerHTML = `
         <div class="auth-user">
           <span class="username">${this.user.username}</span>
-          <a href="/pages/account.html" class="btn-account">Account</a>
+          <a href="/account.html" class="btn-account">Account</a>
           <button class="btn-logout" onclick="authManager.logout()">Logout</button>
         </div>
       `;
     } else {
       authContainer.innerHTML = `
         <div class="auth-buttons">
-          <a href="/pages/login.html" class="btn-login">Login</a>
-          <a href="/pages/register.html" class="btn-register">Register</a>
+          <a href="/login.html" class="btn-login">Login</a>
+          <a href="/register.html" class="btn-register">Register</a>
         </div>
       `;
     }
@@ -132,7 +132,7 @@ class AuthManager {
   requireAuth(callback) {
     if (!this.isAuthenticated) {
       this.showNotification('Please log in first', 'warning');
-      window.location.href = '/pages/login.html';
+      window.location.href = '/login.html';
       return;
     }
     if (callback) callback();
@@ -140,3 +140,4 @@ class AuthManager {
 }
 
 const authManager = new AuthManager();
+

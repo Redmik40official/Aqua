@@ -89,3 +89,4 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('Cart Manager Initialized');
   updateCartCount();
 });
+

@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Handle different cases
         if (
-            (currentPage === 'index.html' && (href === 'index.html' || href === '../index.html')) ||
+            (currentPage === 'index.html' && (href === 'index.html' || href === 'index.html')) ||
             (currentPage === href) ||
             (currentPage === '' && href === 'index.html') ||
-            (currentPage === '' && href === '../index.html')
+            (currentPage === '' && href === 'index.html')
         ) {
             link.classList.add('active');
         }
@@ -38,3 +38,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+

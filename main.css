@@ -551,7 +551,7 @@ section.content-section p {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../underwater-fish-hero-bg.png') no-repeat center center/cover;
+    background: url('underwater-fish-hero-bg.png') no-repeat center center/cover;
     animation: kenBurns 20s infinite alternate linear;
     z-index: 0;
 }
@@ -2308,3 +2308,4 @@ footer {
     padding-bottom: 0;
     margin-bottom: 0;
 }
+

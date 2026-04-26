@@ -293,3 +293,4 @@ const galleryManager = new GalleryManager();
 document.addEventListener('DOMContentLoaded', () => {
   galleryManager.initializeZoom();
 });
+

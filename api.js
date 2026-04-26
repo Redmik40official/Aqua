@@ -1,5 +1,5 @@
-// API Configuration and Helper Functions
-const API_BASE_URL = 'http://localhost:5000/api';
+// Static API Configuration and Mock Functions
+// This file replaces backend API calls with client-side logic using localStorage
 
 // Storage helpers
 const storage = {
@@ -11,127 +11,90 @@ const storage = {
   removeUser: () => localStorage.removeItem('user')
 };
 
-// API request helper
+// Mock API request helper (simulates network delay)
 async function apiCall(endpoint, options = {}) {
-  const headers = {
-    'Content-Type': 'application/json',
-    ...options.headers
-  };
+  console.log(`Mock API Call: ${endpoint}`, options);
   
-  const token = storage.getToken();
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-  
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      headers
-    });
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'API request failed');
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('API Error:', error);
-    throw error;
-  }
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ status: 'success' });
+    }, 300);
+  });
 }
 
-// Auth API
+// Auth API Mock
 const authAPI = {
-  register: (data) => apiCall('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
-  login: (data) => apiCall('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
-  verify: () => apiCall('/auth/verify', { method: 'GET' }),
-  logout: () => apiCall('/auth/logout', { method: 'POST' }),
-  socialLogin: (data) => apiCall('/auth/social-login', { method: 'POST', body: JSON.stringify(data) })
+  register: async (data) => {
+    const user = { username: data.username, email: data.email, id: Date.now() };
+    return { token: 'mock-token-' + Date.now(), user };
+  },
+  login: async (data) => {
+    const user = { username: data.email.split('@')[0], email: data.email, id: 123 };
+    return { token: 'mock-token-' + Date.now(), user };
+  },
+  verify: async () => ({ user: storage.getUser() }),
+  logout: async () => ({ success: true }),
+  socialLogin: async (data) => ({ token: 'social-token', user: { username: 'SocialUser', id: 456 } })
 };
 
-// Products API
+// Products API Mock (Uses products.js data)
 const productsAPI = {
-  getAll: (filters = {}) => {
-    const params = new URLSearchParams(filters);
-    return apiCall(`/products?${params}`);
-  },
-  getById: (id) => apiCall(`/products/${id}`),
-  create: (data) => apiCall('/products', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id, data) => apiCall(`/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id) => apiCall(`/products/${id}`, { method: 'DELETE' }),
-  getCategories: () => apiCall('/products/categories')
+  getAll: async () => (window.products || []),
+  getById: async (id) => (window.products || []).find(p => p.id === id),
+  create: async (data) => ({ ...data, id: Date.now() }),
+  update: async (id, data) => ({ ...data, id }),
+  delete: async (id) => ({ success: true }),
+  getCategories: async () => ['fish', 'shrimp', 'plants', 'accessories']
 };
 
-// Cart API
+// Cart API Mock (Now redundant as cart.js handles localStorage directly)
 const cartAPI = {
-  get: () => apiCall('/cart'),
-  add: (data) => apiCall('/cart/add', { method: 'POST', body: JSON.stringify(data) }),
-  update: (cartId, data) => apiCall(`/cart/update/${cartId}`, { method: 'PUT', body: JSON.stringify(data) }),
-  remove: (cartId) => apiCall(`/cart/remove/${cartId}`, { method: 'DELETE' }),
-  clear: () => apiCall('/cart/clear', { method: 'DELETE' })
+  get: async () => JSON.parse(localStorage.getItem('cart') || '[]'),
+  add: async (data) => { console.log('Mock add to cart'); return { success: true }; },
+  update: async (id, data) => ({ success: true }),
+  remove: async (id) => ({ success: true }),
+  clear: async () => ({ success: true })
 };
 
-// Orders API
+// Orders API Mock
 const ordersAPI = {
-  getAll: () => apiCall('/orders'),
-  getById: (id) => apiCall(`/orders/${id}`),
-  checkout: (data) => apiCall('/orders/checkout', { method: 'POST', body: JSON.stringify(data) }),
-  processPayment: (orderId, data) => apiCall(`/orders/${orderId}/payment`, { method: 'POST', body: JSON.stringify(data) })
+  getAll: async () => [],
+  getById: async (id) => ({ id, status: 'delivered' }),
+  checkout: async (data) => ({ orderId: 'ORD-' + Date.now(), status: 'success' }),
+  processPayment: async (orderId, data) => ({ status: 'paid' })
 };
 
-// Reviews API
+// Reviews API Mock
 const reviewsAPI = {
-  getByProduct: (productId, page = 1) => apiCall(`/reviews/product/${productId}?page=${page}`),
-  create: (data) => apiCall('/reviews', { method: 'POST', body: JSON.stringify(data) }),
-  markHelpful: (reviewId) => apiCall(`/reviews/${reviewId}/helpful`, { method: 'POST' }),
-  delete: (reviewId) => apiCall(`/reviews/${reviewId}`, { method: 'DELETE' }),
-  getSummary: (productId) => apiCall(`/reviews/summary/${productId}`)
+  getByProduct: async (productId) => [],
+  create: async (data) => ({ ...data, id: Date.now() }),
+  markHelpful: async (reviewId) => ({ success: true }),
+  delete: async (reviewId) => ({ success: true }),
+  getSummary: async (productId) => ({ average: 5, count: 1 })
 };
 
-// Users API
+// Users API Mock
 const usersAPI = {
-  getProfile: () => apiCall('/users/profile'),
-  updateProfile: (data) => apiCall('/users/profile', { method: 'PUT', body: JSON.stringify(data) }),
-  changePassword: (data) => apiCall('/users/change-password', { method: 'POST', body: JSON.stringify(data) }),
-  addToWishlist: (productId) => apiCall('/users/wishlist/add', { method: 'POST', body: JSON.stringify({ productId }) }),
-  getWishlist: () => apiCall('/users/wishlist'),
-  removeFromWishlist: (productId) => apiCall(`/users/wishlist/remove/${productId}`, { method: 'DELETE' })
-};
-
-// Blog API
-const blogAPI = {
-  getAll: (filters = {}) => {
-    const params = new URLSearchParams(filters);
-    return apiCall(`/blog?${params}`);
+  getProfile: async () => storage.getUser(),
+  updateProfile: async (data) => {
+    const user = { ...storage.getUser(), ...data };
+    storage.setUser(user);
+    return user;
   },
-  getBySlug: (slug) => apiCall(`/blog/${slug}`),
-  create: (data) => apiCall('/blog', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id, data) => apiCall(`/blog/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id) => apiCall(`/blog/${id}`, { method: 'DELETE' })
+  changePassword: async (data) => ({ success: true }),
+  addToWishlist: async (productId) => ({ success: true }),
+  getWishlist: async () => [],
+  removeFromWishlist: async (productId) => ({ success: true })
 };
 
-// Newsletter API
-const newsletterAPI = {
-  subscribe: (data) => apiCall('/newsletter/subscribe', { method: 'POST', body: JSON.stringify(data) }),
-  unsubscribe: (email) => apiCall('/newsletter/unsubscribe', { method: 'POST', body: JSON.stringify({ email }) })
-};
-
-// Search API
-const searchAPI = {
-  search: (query, type = 'all') => apiCall(`/search?q=${query}&type=${type}`),
-  suggestions: (query) => apiCall(`/search/suggestions?q=${query}`),
-  trending: () => apiCall('/search/trending')
-};
-
-// Analytics API
+// Analytics API Mock
 const analyticsAPI = {
-  track: (data) => apiCall('/analytics/track', { method: 'POST', body: JSON.stringify(data) }),
-  pageStats: () => apiCall('/analytics/stats/pages'),
-  referrerStats: () => apiCall('/analytics/stats/referrers'),
-  overview: () => apiCall('/analytics/stats/overview'),
-  conversion: () => apiCall('/analytics/stats/conversion'),
-  sitemap: () => fetch(`${API_BASE_URL}/analytics/sitemap.xml`)
+  track: async (data) => { console.log('Analytics tracked:', data); return { success: true }; },
+  pageStats: async () => ({}),
+  referrerStats: async () => ({}),
+  overview: async () => ({}),
+  conversion: async () => ({}),
+  sitemap: async () => '<?xml version="1.0" encoding="UTF-8"?><urlset></urlset>'
 };
 
 // Track page view
@@ -141,3 +104,4 @@ window.addEventListener('load', () => {
     referrer: document.referrer
   }).catch(err => console.log('Analytics tracking failed:', err));
 });
+

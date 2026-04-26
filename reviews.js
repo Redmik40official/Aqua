@@ -169,3 +169,4 @@ class ReviewsManager {
 }
 
 const reviewsManager = new ReviewsManager();
+

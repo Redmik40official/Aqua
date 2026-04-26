@@ -240,8 +240,8 @@ window.products = [
 
 function buyNow(productId) {
     addToCart(productId);
-    const isPage = window.location.pathname.includes('/pages/');
-    window.location.href = isPage ? 'cart.html' : 'pages/cart.html';
+    const isPage = window.location.pathname.includes('/');
+    window.location.href = isPage ? 'cart.html' : 'cart.html';
 }
 
 // Render products on page load
@@ -259,9 +259,8 @@ function renderProducts(itemsToRender = products) {
     }
     
     productList.innerHTML = itemsToRender.map(product => {
-        // Handle image path relative to the page
-        const isPage = window.location.pathname.includes('/pages/');
-        const imagePath = product.image ? (isPage ? '../' + product.image : product.image) : null;
+        // Handle image path (all files are now in the root)
+        const imagePath = product.image ? product.image : null;
         
         return `
         <div class="product-card-premium glass-panel" data-category="${product.category}">
@@ -329,3 +328,4 @@ function addToCart(productId) {
         console.log('Added product to cart:', productId);
     }
 }
+
